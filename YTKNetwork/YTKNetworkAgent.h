@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 ///  @return The result URL.
 - (NSString *)buildRequestUrl:(YTKBaseRequest *)request;
 
+- (YTKBaseRequest *)checkRequetExist:(YTKBaseRequest *)destRequet;
+
 @end
 
 NS_ASSUME_NONNULL_END

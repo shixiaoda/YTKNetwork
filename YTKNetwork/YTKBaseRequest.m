@@ -106,8 +106,34 @@ NSString *const YTKRequestValidationErrorDomain = @"com.yuantiku.request.validat
 #pragma mark - Request Action
 
 - (void)start {
-    [self toggleAccessoriesWillStartCallBack];
-    [[YTKNetworkAgent sharedAgent] addRequest:self];
+//    [self toggleAccessoriesWillStartCallBack];
+//    [[YTKNetworkAgent sharedAgent] addRequest:self];
+    if (self.requestPolicy == YTKRequestPolicyNormal)
+    {
+        [self toggleAccessoriesWillStartCallBack];
+        [[YTKNetworkAgent sharedAgent] addRequest:self];
+    }
+    else if (self.requestPolicy == YTKRequestPolicyCancelFront)
+    {
+        YTKBaseRequest *requet = [[YTKNetworkAgent sharedAgent] checkRequetExist:self];
+        if (requet != nil)
+        {
+            [requet stop];
+        }
+        
+        [self toggleAccessoriesWillStartCallBack];
+        [[YTKNetworkAgent sharedAgent] addRequest:self];
+    }
+    else if (self.requestPolicy == YTKRequestPolicyCancelBack)
+    {
+        YTKBaseRequest *requet = [[YTKNetworkAgent sharedAgent] checkRequetExist:self];
+        if (requet == nil)
+        {
+            [self toggleAccessoriesWillStartCallBack];
+            [[YTKNetworkAgent sharedAgent] addRequest:self];
+        }
+    }
+
 }
 
 - (void)stop {

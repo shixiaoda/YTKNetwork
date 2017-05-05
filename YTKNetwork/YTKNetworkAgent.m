@@ -419,6 +419,19 @@
     Unlock();
 }
 
+- (YTKBaseRequest *)checkRequetExist:(YTKBaseRequest *)destRequet {
+    NSString *destClass = NSStringFromClass([destRequet class]);
+    for (NSString* key in _requestsRecord)
+    {
+        YTKBaseRequest *request = _requestsRecord[key];
+        if ([NSStringFromClass([request class]) isEqualToString:destClass])
+        {
+            return request;
+        }
+    }
+    return nil;
+}
+
 #pragma mark -
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
