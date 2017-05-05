@@ -233,6 +233,8 @@ typedef void(^YTKRequestCompletionBlock)(__kindof YTKBaseRequest *request);
 
 @property (nonatomic) YTKRequestPolicy requestPolicy;
 
+@property (nonatomic, copy) NSString* requestUrl;
+
 ///  Set completion callbacks
 - (void)setCompletionBlockWithSuccess:(nullable YTKRequestCompletionBlock)success
                               failure:(nullable YTKRequestCompletionBlock)failure;
