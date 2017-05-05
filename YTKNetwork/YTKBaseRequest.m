@@ -163,9 +163,9 @@ NSString *const YTKRequestValidationErrorDomain = @"com.yuantiku.request.validat
 - (void)requestFailedFilter {
 }
 
-- (NSString *)requestUrl {
-    return @"";
-}
+//- (NSString *)requestUrl {
+//    return @"";
+//}
 
 - (NSString *)cdnUrl {
     return @"";
