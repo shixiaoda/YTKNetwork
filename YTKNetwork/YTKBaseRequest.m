@@ -172,11 +172,11 @@ NSString *const YTKRequestValidationErrorDomain = @"com.yuantiku.request.validat
 }
 
 - (NSString *)baseUrl {
-    return @"";
+    return nil;
 }
 
 - (NSTimeInterval)requestTimeoutInterval {
-    return 60;
+    return 30;
 }
 
 - (id)requestArgument {

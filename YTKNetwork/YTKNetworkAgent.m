@@ -100,17 +100,19 @@
     NSParameterAssert(request != nil);
 
     NSString *detailUrl = [request requestUrl];
-    NSURL *temp = [NSURL URLWithString:detailUrl];
-    // If detailUrl is valid URL
-    if (temp && temp.host && temp.scheme) {
-        return detailUrl;
-    }
+    
     // Filter URL if needed
     NSArray *filters = [_config urlFilters];
     for (id<YTKUrlFilterProtocol> f in filters) {
         detailUrl = [f filterUrl:detailUrl withRequest:request];
     }
-
+    
+    NSURL *temp = [NSURL URLWithString:detailUrl];
+    // If detailUrl is valid URL
+    if (temp && temp.host && temp.scheme) {
+        return detailUrl;
+    }
+    
     NSString *baseUrl;
     if ([request useCDN]) {
         if ([request cdnUrl].length > 0) {
@@ -421,10 +423,13 @@
 
 - (YTKBaseRequest *)checkRequetExist:(YTKBaseRequest *)destRequet {
     NSString *destClass = NSStringFromClass([destRequet class]);
-    for (NSString* key in _requestsRecord)
+    for (NSNumber* key in _requestsRecord)
     {
+        Lock();
         YTKBaseRequest *request = _requestsRecord[key];
-        if ([NSStringFromClass([request class]) isEqualToString:destClass])
+        Unlock();
+        if ([NSStringFromClass([request class]) isEqualToString:destClass] &&
+             [request.requestUrl isEqualToString:destRequet.requestUrl])
         {
             return request;
         }

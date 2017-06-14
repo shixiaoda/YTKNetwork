@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///  @param request   request itself
 ///
 ///  @return A new url which will be used as a new `requestUrl`
-- (NSString *)filterUrl:(NSString *)originUrl withRequest:(YTKBaseRequest *)request;
+- (NSString *)filterUrl:(NSString *)originUrl withRequest:(YTKBaseRequest * _Nullable)request;
 @end
 
 ///  YTKCacheDirPathFilterProtocol can be used to append common path components when caching response results
