@@ -423,15 +423,20 @@
 
 - (YTKBaseRequest *)checkRequetExist:(YTKBaseRequest *)destRequet {
     NSString *destClass = NSStringFromClass([destRequet class]);
-    for (NSNumber* key in _requestsRecord)
-    {
-        Lock();
-        YTKBaseRequest *request = _requestsRecord[key];
-        Unlock();
-        if ([NSStringFromClass([request class]) isEqualToString:destClass] &&
-             [request.requestUrl isEqualToString:destRequet.requestUrl])
-        {
-            return request;
+    Lock();
+    NSArray *allKeys = [_requestsRecord allKeys];
+    Unlock();
+    if (allKeys && allKeys.count > 0) {
+        NSArray *copiedKeys = [allKeys copy];
+        for (NSNumber *key in copiedKeys) {
+            Lock();
+            YTKBaseRequest *request = _requestsRecord[key];
+            Unlock();
+            if ([NSStringFromClass([request class]) isEqualToString:destClass] &&
+                [request.requestUrl isEqualToString:destRequet.requestUrl])
+            {
+                return request;
+            }
         }
     }
     return nil;
