@@ -433,7 +433,8 @@
             YTKBaseRequest *request = _requestsRecord[key];
             Unlock();
             if ([NSStringFromClass([request class]) isEqualToString:destClass] &&
-                [request.requestUrl isEqualToString:destRequet.requestUrl])
+                [request.requestUrl isEqualToString:destRequet.requestUrl] &&
+                [request.requestArgument isEqual:destRequet.requestArgument])
             {
                 return request;
             }
