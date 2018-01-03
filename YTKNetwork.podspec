@@ -5,12 +5,7 @@ Pod::Spec.new do |s|
   s.summary      = "YTKNetwork is a high level request util based on AFNetworking."
   s.homepage     = "https://github.com/yuantiku/YTKNetwork"
   s.license      = "MIT"
-  s.author       = {
-                    "tangqiao" => "tangqiao@fenbi.com",
-                    "lancy" => "lancy@fenbi.com",
-                    "maojj" => "maojj@fenbi.com",
-                    "liujl" => "liujl@fenbi.com"
- }
+  s.author       = { 'shixiaoda@qq.com' => 'shixiaoda@babybus.com' }
   s.source        = { :git => "https://github.com/shixiaoda/YTKNetwork.git", :tag => s.version.to_s }
   s.source_files  = "YTKNetwork/*.{h,m}"
   s.requires_arc  = true
