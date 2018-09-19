@@ -436,9 +436,11 @@
             Lock();
             YTKBaseRequest *request = _requestsRecord[key];
             Unlock();
+            //参数都为空 或者 参数相等,认为是同类型请求
             if ([NSStringFromClass([request class]) isEqualToString:destClass] &&
                 [request.requestUrl isEqualToString:destRequet.requestUrl] &&
-                [request.requestArgument isEqual:destRequet.requestArgument])
+                ((request.requestArgument == nil && destRequet.requestArgument == nil) ||(request.requestArgument && destRequet.requestArgument && [request.requestArgument isEqual:destRequet.requestArgument]))
+                )
             {
                 return request;
             }
