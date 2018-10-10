@@ -314,7 +314,8 @@
     BOOL succeed = NO;
 
     request.responseObject = responseObject;
-    if ([request.responseObject isKindOfClass:[NSData class]]) {
+    NSData * responseData = responseObject;//OS_dispatch_data 转成 NSData
+    if ([responseData isKindOfClass:[NSData class]]) {
         request.responseData = responseObject;
         request.responseString = [[NSString alloc] initWithData:responseObject encoding:[YTKNetworkUtils stringEncodingWithRequest:request]];
 

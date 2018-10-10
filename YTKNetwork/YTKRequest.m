@@ -54,7 +54,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
 @property (nonatomic, strong) NSDate *creationDate;
 @property (nonatomic, strong) NSString *appVersionString;
-
+@property (nonatomic, strong) NSString *clientCacheSign;
 @end
 
 @implementation YTKCacheMetadata
@@ -69,6 +69,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
     [aCoder encodeObject:@(self.stringEncoding) forKey:NSStringFromSelector(@selector(stringEncoding))];
     [aCoder encodeObject:self.creationDate forKey:NSStringFromSelector(@selector(creationDate))];
     [aCoder encodeObject:self.appVersionString forKey:NSStringFromSelector(@selector(appVersionString))];
+    [aCoder encodeObject:self.clientCacheSign forKey:NSStringFromSelector(@selector(clientCacheSign))];
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -82,6 +83,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
     self.stringEncoding = [[aDecoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(stringEncoding))] integerValue];
     self.creationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(creationDate))];
     self.appVersionString = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(appVersionString))];
+    self.clientCacheSign = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(clientCacheSign))];
 
     return self;
 }
@@ -142,13 +144,19 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
 
 - (void)requestCompletePreprocessor {
     [super requestCompletePreprocessor];
-
-    if (self.writeCacheAsynchronously) {
-        dispatch_async(ytkrequest_cache_writing_queue(), ^{
-            [self saveResponseDataToCacheFile:[super responseData]];
-        });
+    //是否命中缓存
+    NSString* clientCacheHit = [self.responseHeaders objectForKey:@"Client_Cache_Hit"];
+    if ([clientCacheHit boolValue]) {
+        //使用缓存,不保存response
+        return;
     } else {
-        [self saveResponseDataToCacheFile:[super responseData]];
+        if (self.writeCacheAsynchronously) {
+            dispatch_async(ytkrequest_cache_writing_queue(), ^{
+                [self saveResponseDataToCacheFile:[super responseData]];
+            });
+        } else {
+            [self saveResponseDataToCacheFile:[super responseData]];
+        }
     }
 }
 
@@ -341,6 +349,8 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
                 metadata.stringEncoding = [YTKNetworkUtils stringEncodingWithRequest:self];
                 metadata.creationDate = [NSDate date];
                 metadata.appVersionString = [YTKNetworkUtils appVersionString];
+                //保存缓存签名
+                metadata.clientCacheSign = [self.responseHeaders objectForKey:@"Client_Cache_Sign"];
                 [NSKeyedArchiver archiveRootObject:metadata toFile:[self cacheMetadataFilePath]];
             } @catch (NSException *exception) {
                 YTKLog(@"Save cache failed, reason = %@", exception.reason);
