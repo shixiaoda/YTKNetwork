@@ -145,7 +145,7 @@ static dispatch_queue_t ytkrequest_cache_writing_queue() {
 - (void)requestCompletePreprocessor {
     [super requestCompletePreprocessor];
     //是否命中缓存
-    NSString* clientCacheHit = [self.responseHeaders objectForKey:@"Client_Cache_Hit"];
+    NSString* clientCacheHit = [self.responseHeaders objectForKey:@"Client_Cache_Use"];
     if ([clientCacheHit boolValue]) {
         //使用缓存,不保存response
         return;
